@@ -70,7 +70,7 @@ export default function TimeTracker() {
   const totalHours = entries.reduce((s, e) => s + e.duration, 0) / 3600;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-4xl mx-auto animate-page">
       <div className="page-header">
         <div>
           <h2 className="page-title">⏱️ Suivi du temps</h2>
@@ -137,8 +137,8 @@ export default function TimeTracker() {
           <p className="text-center py-8 text-gray-400">Aucune entrée de temps</p>
         ) : (
           <div className="space-y-2">
-            {entries.map(e => (
-              <div key={e.id} className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+            {entries.map((e, i) => (
+              <div key={e.id} style={{ animationDelay: `${i * 35}ms` }} className={`flex items-center gap-3 p-3 rounded-xl border animate-list-item ${
                 selected.includes(e.id) ? 'border-primary-300 dark:border-primary-700 bg-primary-50 dark:bg-primary-900/20'
                 : 'border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/30'
               }`}>

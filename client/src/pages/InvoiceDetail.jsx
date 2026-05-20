@@ -28,8 +28,8 @@ function EmailModal({ invoice, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-modal-backdrop">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md animate-modal-content">
         <div className="p-5 border-b border-gray-100 dark:border-gray-800 flex justify-between">
           <h3 className="font-bold text-gray-900 dark:text-white">📧 Envoyer par email</h3>
           <button onClick={onClose} className="text-gray-400 text-xl">×</button>
@@ -96,7 +96,7 @@ export default function InvoiceDetail() {
   const copyLink = () => { navigator.clipboard.writeText(publicLink); alert('Lien copié !'); };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
+    <div className="p-6 max-w-3xl mx-auto animate-page">
       {emailModal && <EmailModal invoice={invoice} onClose={() => setEmailModal(false)} />}
 
       <div className="mb-6 flex items-start justify-between gap-3 flex-wrap">

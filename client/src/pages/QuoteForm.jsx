@@ -63,7 +63,7 @@ export default function QuoteForm() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
+    <div className="p-6 max-w-3xl mx-auto animate-page">
       <div className="mb-6">
         <button onClick={() => navigate(-1)} className="text-sm text-gray-400 hover:text-gray-600 mb-2 flex items-center gap-1">← Retour</button>
         <h2 className="page-title">{isEdit ? 'Modifier le devis' : 'Nouveau devis'}</h2>

@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { api } from '../utils/api';
 import BarChart from '../components/BarChart';
 
-function StatCard({ label, value, icon, sub, color = 'bg-primary-50 dark:bg-primary-900/20', trend }) {
+function StatCard({ label, value, icon, sub, color = 'bg-primary-50 dark:bg-primary-900/20', trend, style }) {
   return (
-    <div className="card flex items-start gap-4 hover:shadow-md transition-shadow">
+    <div className="card card-interactive flex items-start gap-4 animate-list-item" style={style}>
       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 ${color}`}>{icon}</div>
       <div className="flex-1 min-w-0">
         <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide">{label}</p>
@@ -52,7 +52,7 @@ export default function Dashboard() {
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto animate-page">
       <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -83,12 +83,12 @@ export default function Dashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Revenus encaissés" value={fmt(stats.earned)} icon="💰" color="bg-green-50 dark:bg-green-900/20" />
-        <StatCard label="En attente" value={fmt(stats.pending)} icon="⏳" color="bg-yellow-50 dark:bg-yellow-900/20" />
+        <StatCard label="Revenus encaissés" value={fmt(stats.earned)} icon="💰" color="bg-green-50 dark:bg-green-900/20" style={{ animationDelay: '0ms' }} />
+        <StatCard label="En attente" value={fmt(stats.pending)} icon="⏳" color="bg-yellow-50 dark:bg-yellow-900/20" style={{ animationDelay: '60ms' }} />
         <StatCard label="Factures" value={stats.invoiceCount} icon="🧾" color="bg-primary-50 dark:bg-primary-900/20"
-          sub={analytics ? `Taux devis: ${analytics.quoteConversionRate}%` : undefined} />
+          sub={analytics ? `Taux devis: ${analytics.quoteConversionRate}%` : undefined} style={{ animationDelay: '120ms' }} />
         <StatCard label="Clients" value={stats.clientCount} icon="👥" color="bg-purple-50 dark:bg-purple-900/20"
-          sub={analytics?.avgInvoiceValue ? `Panier moy: ${fmt(analytics.avgInvoiceValue)}` : undefined} />
+          sub={analytics?.avgInvoiceValue ? `Panier moy: ${fmt(analytics.avgInvoiceValue)}` : undefined} style={{ animationDelay: '180ms' }} />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">

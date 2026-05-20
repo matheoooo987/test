@@ -30,7 +30,7 @@ export default function Invoices() {
   const filtered = filter === 'all' ? invoices : invoices.filter(i => i.status === filter);
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-8 max-w-5xl mx-auto animate-page">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Factures</h2>
@@ -68,8 +68,8 @@ export default function Invoices() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map(inv => (
-                <tr key={inv.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+              {filtered.map((inv, i) => (
+                <tr key={inv.id} className="border-b border-gray-50 hover:bg-gray-50 animate-list-item" style={{ animationDelay: `${i * 35}ms` }}>
                   <td className="py-3 px-2">
                     <Link to={`/invoices/${inv.id}`} className="font-mono text-sm text-primary-600 hover:underline font-medium">{inv.number}</Link>
                   </td>

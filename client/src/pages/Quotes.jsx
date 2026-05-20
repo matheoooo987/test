@@ -36,7 +36,7 @@ export default function Quotes() {
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-5xl mx-auto animate-page">
       <div className="page-header">
         <div>
           <h2 className="page-title">📋 Devis</h2>
@@ -63,8 +63,8 @@ export default function Quotes() {
                 </tr>
               </thead>
               <tbody>
-                {quotes.map(q => (
-                  <tr key={q.id} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                {quotes.map((q, i) => (
+                  <tr key={q.id} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30 animate-list-item" style={{ animationDelay: `${i * 35}ms` }}>
                     <td className="py-3 px-2">
                       <Link to={`/quotes/${q.id}`} className="font-mono text-primary-600 hover:underline font-medium">{q.number}</Link>
                     </td>

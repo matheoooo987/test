@@ -17,8 +17,8 @@ function Modal({ expense, clients, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-modal-backdrop">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md animate-modal-content">
         <div className="p-5 border-b border-gray-100 dark:border-gray-800 flex justify-between">
           <h3 className="font-bold text-gray-900 dark:text-white">{expense?.id ? 'Modifier' : 'Nouvelle dépense'}</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl">×</button>
@@ -75,7 +75,7 @@ export default function Expenses() {
   const filtered = filter === 'all' ? expenses : expenses.filter(e => e.category === filter);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-4xl mx-auto animate-page">
       {modal !== false && (
         <Modal expense={modal || undefined} clients={clients} onClose={() => setModal(false)} onSave={() => { setModal(false); load(); }} />
       )}
@@ -117,8 +117,8 @@ export default function Expenses() {
           </div>
         ) : (
           <div className="space-y-2">
-            {filtered.map(e => (
-              <div key={e.id} className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/30 border border-gray-50 dark:border-gray-800/50 transition-colors">
+            {filtered.map((e, i) => (
+              <div key={e.id} className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/30 border border-gray-50 dark:border-gray-800/50 animate-list-item" style={{ animationDelay: `${i * 35}ms` }}>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-medium text-sm text-gray-900 dark:text-white">{e.description}</p>

@@ -33,12 +33,13 @@ export default function Sidebar() {
             to={to}
             end={to === '/'}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+              `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${
                 isActive
                   ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
                   : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
               }`
             }
+            style={{ transition: 'background-color 150ms ease-out, color 150ms ease-out' }}
           >
             <span className="text-base w-5 text-center">{icon}</span>
             {label}

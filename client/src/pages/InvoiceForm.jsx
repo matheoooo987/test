@@ -55,7 +55,7 @@ export default function InvoiceForm() {
   };
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
+    <div className="p-8 max-w-3xl mx-auto animate-page">
       <div className="mb-6">
         <button onClick={() => navigate(-1)} className="text-sm text-gray-400 hover:text-gray-600 mb-2 flex items-center gap-1">← Retour</button>
         <h2 className="text-2xl font-bold text-gray-900">{isEdit ? 'Modifier la facture' : 'Nouvelle facture'}</h2>

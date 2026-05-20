@@ -24,7 +24,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
+    <div className="p-6 max-w-2xl mx-auto animate-page">
       <div className="mb-6">
         <h2 className="page-title">⚙️ Paramètres</h2>
         <p className="page-sub">Configuration de ton compte FreelanceFlow</p>

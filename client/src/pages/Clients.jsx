@@ -18,8 +18,8 @@ function ClientModal({ client, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md border border-gray-100 dark:border-gray-800">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-modal-backdrop">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md border border-gray-100 dark:border-gray-800 animate-modal-content">
         <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
           <h3 className="font-bold text-gray-900 dark:text-white">{client?.id ? 'Modifier le client' : 'Nouveau client'}</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xl">×</button>
@@ -72,7 +72,7 @@ export default function Clients() {
   );
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="p-8 max-w-4xl mx-auto animate-page">
       {modal !== undefined && modal !== false && (
         <ClientModal client={modal} onClose={() => setModal(false)} onSave={() => { setModal(false); load(); }} />
       )}
@@ -96,8 +96,8 @@ export default function Clients() {
           </div>
         ) : (
           <div className="space-y-2">
-            {filtered.map(c => (
-              <div key={c.id} className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 border border-gray-50 transition-colors">
+            {filtered.map((c, i) => (
+              <div key={c.id} className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/40 border border-gray-50 dark:border-gray-800/50 animate-list-item" style={{ animationDelay: `${i * 40}ms` }}>
                 <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center font-bold text-primary-700 text-sm flex-shrink-0">
                   {c.name[0]?.toUpperCase()}
                 </div>

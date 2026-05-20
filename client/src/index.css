@@ -2,36 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
 @layer base {
   body {
-    @apply bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased transition-colors duration-200;
+    @apply bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased;
+    transition: background-color 200ms ease, color 200ms ease;
   }
 }
 
 @layer components {
+  /* Buttons — press feedback + no transition:all */
   .btn {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none;
+    transition: background-color 150ms ease-out, color 150ms ease-out,
+                box-shadow 150ms ease-out, transform 160ms ease-out,
+                border-color 150ms ease-out, opacity 150ms ease-out;
+  }
+  .btn:not(:disabled):active {
+    transform: scale(0.97);
   }
   .btn-primary {
-    @apply btn bg-primary-600 text-white hover:bg-primary-700 shadow-sm;
+    @apply btn bg-primary-600 text-white shadow-sm;
+  }
+  .btn-primary:not(:disabled):hover {
+    @apply bg-primary-700;
   }
   .btn-secondary {
-    @apply btn bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm;
+    @apply btn bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 shadow-sm;
+  }
+  .btn-secondary:not(:disabled):hover {
+    @apply bg-gray-50 dark:bg-gray-700;
   }
   .btn-danger {
-    @apply btn bg-danger-500 text-white hover:bg-danger-600;
+    @apply btn bg-danger-500 text-white;
   }
+  .btn-danger:not(:disabled):hover {
+    @apply bg-danger-600;
+  }
+
+  /* Card — smooth shadow transition */
   .card {
     @apply bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6;
+    transition: box-shadow 200ms ease-out, transform 200ms ease-out,
+                background-color 200ms ease, border-color 200ms ease;
   }
+
+  /* Input — no transition:all */
   .input {
-    @apply w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all;
+    @apply w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out,
+                background-color 150ms ease-out;
   }
+
   .label {
     @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
   }
   .badge {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    transition: background-color 150ms ease-out, color 150ms ease-out;
   }
   .page-header {
     @apply mb-6 flex items-center justify-between;
@@ -41,5 +74,77 @@
   }
   .page-sub {
     @apply text-gray-500 dark:text-gray-400 text-sm mt-1;
+  }
+}
+
+/* ─── Keyframe animations ─── */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ─── Animation utilities ─── */
+
+/* Page entry — slide up from below with fade */
+.animate-page {
+  animation: slide-up-fade 280ms var(--ease-out) both;
+}
+
+/* Modal backdrop — simple fade */
+.animate-modal-backdrop {
+  animation: fade-in 180ms ease-out both;
+}
+
+/* Modal content — scale from 0.95 + fade */
+.animate-modal-content {
+  animation: scale-in 200ms var(--ease-out) both;
+}
+
+/* List items — slide up with stagger via inline animationDelay */
+.animate-list-item {
+  animation: slide-up-fade 240ms var(--ease-out) both;
+}
+
+/* ─── Card hover lift — desktop only ─── */
+@media (hover: hover) and (pointer: fine) {
+  .card-interactive:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+}
+
+/* ─── Reduced motion — respect user preference ─── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-page,
+  .animate-modal-backdrop,
+  .animate-modal-content,
+  .animate-list-item {
+    animation: fade-in 150ms ease-out both;
+  }
+  .btn:not(:disabled):active {
+    transform: none;
   }
 }
