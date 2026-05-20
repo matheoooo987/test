@@ -10,9 +10,10 @@ function getNextInvoiceNumber() {
   return `${prefix}${String(num).padStart(4, '0')}`;
 }
 
-function calcTotal(items, taxRate) {
+function calcTotal(items, taxRate, discount) {
   const subtotal = items.reduce((s, i) => s + i.quantity * i.unit_price, 0);
-  return subtotal + subtotal * (taxRate / 100);
+  const discounted = subtotal - subtotal * ((discount || 0) / 100);
+  return discounted + discounted * ((taxRate || 0) / 100);
 }
 
 router.get('/', (req, res) => {
@@ -43,17 +44,19 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { client_id, issue_date, due_date, notes, tax_rate, items, status } = req.body;
+  const { client_id, issue_date, due_date, notes, tax_rate, discount, items, status } = req.body;
   if (!client_id) return res.status(400).json({ error: 'client_id required' });
   const id = uuidv4();
   const number = getNextInvoiceNumber();
   const taxR = parseFloat(tax_rate) || 0;
+  const disc = parseFloat(discount) || 0;
   const parsedItems = items || [];
-  const total = calcTotal(parsedItems, taxR);
+  const total = calcTotal(parsedItems, taxR, disc);
+  const token = uuidv4().replace(/-/g, '').substring(0, 16);
 
-  db.prepare('INSERT INTO invoices (id, number, client_id, status, issue_date, due_date, notes, tax_rate, total) VALUES (?,?,?,?,?,?,?,?,?)')
+  db.prepare('INSERT INTO invoices (id, number, client_id, status, issue_date, due_date, notes, tax_rate, discount, total, public_token) VALUES (?,?,?,?,?,?,?,?,?,?,?)')
     .run(id, number, client_id, status || 'draft', issue_date || new Date().toISOString().split('T')[0],
-      due_date || new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0], notes || '', taxR, total);
+      due_date || new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0], notes || '', taxR, disc, total, token);
 
   const insertItem = db.prepare('INSERT INTO invoice_items (id, invoice_id, description, quantity, unit_price) VALUES (?,?,?,?,?)');
   for (const item of parsedItems) {
@@ -66,13 +69,14 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  const { client_id, issue_date, due_date, notes, tax_rate, items, status } = req.body;
+  const { client_id, issue_date, due_date, notes, tax_rate, discount, items, status } = req.body;
   const taxR = parseFloat(tax_rate) || 0;
+  const disc = parseFloat(discount) || 0;
   const parsedItems = items || [];
-  const total = calcTotal(parsedItems, taxR);
+  const total = calcTotal(parsedItems, taxR, disc);
 
-  db.prepare('UPDATE invoices SET client_id=?, status=?, issue_date=?, due_date=?, notes=?, tax_rate=?, total=? WHERE id=?')
-    .run(client_id, status, issue_date, due_date, notes || '', taxR, total, req.params.id);
+  db.prepare('UPDATE invoices SET client_id=?, status=?, issue_date=?, due_date=?, notes=?, tax_rate=?, discount=?, total=? WHERE id=?')
+    .run(client_id, status, issue_date, due_date, notes || '', taxR, disc, total, req.params.id);
 
   db.prepare('DELETE FROM invoice_items WHERE invoice_id = ?').run(req.params.id);
   const insertItem = db.prepare('INSERT INTO invoice_items (id, invoice_id, description, quantity, unit_price) VALUES (?,?,?,?,?)');

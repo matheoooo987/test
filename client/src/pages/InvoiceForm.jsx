@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../utils/api';
 
-const empty = { client_id: '', issue_date: new Date().toISOString().split('T')[0], due_date: '', notes: '', tax_rate: 0, status: 'draft', items: [] };
+const empty = { client_id: '', issue_date: new Date().toISOString().split('T')[0], due_date: '', notes: '', tax_rate: 20, discount: 0, status: 'draft', items: [] };
 const emptyItem = { description: '', quantity: 1, unit_price: 0 };
 
 export default function InvoiceForm() {
@@ -36,8 +36,9 @@ export default function InvoiceForm() {
   const removeItem = (i) => setForm(f => ({ ...f, items: f.items.filter((_, idx) => idx !== i) }));
 
   const subtotal = form.items.reduce((s, i) => s + (i.quantity || 0) * (i.unit_price || 0), 0);
-  const taxAmt = subtotal * ((parseFloat(form.tax_rate) || 0) / 100);
-  const total = subtotal + taxAmt;
+  const discounted = subtotal - subtotal * ((parseFloat(form.discount) || 0) / 100);
+  const taxAmt = discounted * ((parseFloat(form.tax_rate) || 0) / 100);
+  const total = discounted + taxAmt;
   const fmt = (n) => `${n.toFixed(2)} ${currency}`;
 
   const handleSubmit = async (e) => {
@@ -78,6 +79,10 @@ export default function InvoiceForm() {
             <div>
               <label className="label">Date d'échéance</label>
               <input className="input" type="date" value={form.due_date} onChange={set('due_date')} />
+            </div>
+            <div>
+              <label className="label">Remise (%)</label>
+              <input className="input" type="number" min="0" max="100" value={form.discount} onChange={set('discount')} />
             </div>
             <div>
               <label className="label">TVA (%)</label>
@@ -129,6 +134,11 @@ export default function InvoiceForm() {
               <div className="flex justify-between text-gray-500">
                 <span>Sous-total</span><span className="font-medium">{fmt(subtotal)}</span>
               </div>
+              {(parseFloat(form.discount) || 0) > 0 && (
+                <div className="flex justify-between text-red-500">
+                  <span>Remise ({form.discount}%)</span><span>-{fmt(subtotal * ((parseFloat(form.discount) || 0) / 100))}</span>
+                </div>
+              )}
               <div className="flex justify-between text-gray-500">
                 <span>TVA ({form.tax_rate || 0}%)</span><span className="font-medium">{fmt(taxAmt)}</span>
               </div>
