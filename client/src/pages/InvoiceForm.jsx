@@ -19,7 +19,7 @@ export default function InvoiceForm() {
     api.getSettings().then(s => s.currency && setCurrency(s.currency)).catch(() => {});
     if (isEdit) {
       api.getInvoice(id).then(inv => {
-        setForm({ client_id: inv.client_id, issue_date: inv.issue_date, due_date: inv.due_date, notes: inv.notes || '', tax_rate: inv.tax_rate, status: inv.status, items: inv.items || [] });
+        setForm({ client_id: inv.client_id, issue_date: inv.issue_date, due_date: inv.due_date, notes: inv.notes || '', tax_rate: inv.tax_rate, discount: inv.discount || 0, status: inv.status, items: inv.items || [] });
       });
     } else {
       const due = new Date(); due.setDate(due.getDate() + 30);

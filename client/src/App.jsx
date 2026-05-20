@@ -42,7 +42,7 @@ export default function App() {
               <Route path="/invoices/:id/edit" element={<InvoiceForm />} />
               <Route path="/quotes" element={<Quotes />} />
               <Route path="/quotes/new" element={<QuoteForm />} />
-              <Route path="/quotes/:id" element={<Quotes />} />
+              <Route path="/quotes/:id" element={<QuoteForm />} />
               <Route path="/quotes/:id/edit" element={<QuoteForm />} />
               <Route path="/time" element={<TimeTracker />} />
               <Route path="/expenses" element={<Expenses />} />

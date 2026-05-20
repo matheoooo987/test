@@ -3,46 +3,51 @@ import { api } from '../utils/api';
 
 function ClientModal({ client, onClose, onSave }) {
   const [form, setForm] = useState(client || { name: '', email: '', phone: '', address: '', company: '' });
+  const [saving, setSaving] = useState(false);
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (client?.id) await api.updateClient(client.id, form);
-    else await api.createClient(form);
-    onSave();
+    setSaving(true);
+    try {
+      if (client?.id) await api.updateClient(client.id, form);
+      else await api.createClient(form);
+      onSave();
+    } catch (err) { alert('Erreur : ' + err.message); }
+    setSaving(false);
   };
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
-        <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-          <h3 className="font-bold text-gray-900">{client?.id ? 'Modifier le client' : 'Nouveau client'}</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl">×</button>
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md border border-gray-100 dark:border-gray-800">
+        <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+          <h3 className="font-bold text-gray-900 dark:text-white">{client?.id ? 'Modifier le client' : 'Nouveau client'}</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xl">×</button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
             <label className="label">Nom *</label>
-            <input className="input" value={form.name} onChange={set('name')} required />
+            <input className="input" value={form.name} onChange={set('name')} required placeholder="Jean Dupont" />
           </div>
           <div>
             <label className="label">Entreprise</label>
-            <input className="input" value={form.company} onChange={set('company')} />
+            <input className="input" value={form.company} onChange={set('company')} placeholder="ACME Corp" />
           </div>
           <div>
             <label className="label">Email</label>
-            <input className="input" type="email" value={form.email} onChange={set('email')} />
+            <input className="input" type="email" value={form.email} onChange={set('email')} placeholder="jean@exemple.com" />
           </div>
           <div>
             <label className="label">Téléphone</label>
-            <input className="input" value={form.phone} onChange={set('phone')} />
+            <input className="input" value={form.phone} onChange={set('phone')} placeholder="+33 6 12 34 56 78" />
           </div>
           <div>
             <label className="label">Adresse</label>
-            <textarea className="input resize-none" rows={2} value={form.address} onChange={set('address')} />
+            <textarea className="input resize-none" rows={2} value={form.address} onChange={set('address')} placeholder="12 rue de la Paix, 75001 Paris" />
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="btn-secondary flex-1">Annuler</button>
-            <button type="submit" className="btn-primary flex-1">Enregistrer</button>
+            <button type="submit" disabled={saving} className="btn-primary flex-1">{saving ? '⏳ Enregistrement…' : 'Enregistrer'}</button>
           </div>
         </form>
       </div>
@@ -52,7 +57,7 @@ function ClientModal({ client, onClose, onSave }) {
 
 export default function Clients() {
   const [clients, setClients] = useState([]);
-  const [modal, setModal] = useState(null);
+  const [modal, setModal] = useState(false);
   const [search, setSearch] = useState('');
 
   const load = () => api.getClients().then(setClients);
